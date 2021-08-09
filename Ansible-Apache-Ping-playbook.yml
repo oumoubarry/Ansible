@@ -1,0 +1,44 @@
+
+- name: # Apache webserver with customize message on Amazon Linux Clients
+  hosts: Amazon-Linux-Clients
+  become: yes
+
+  tasks: # set of task
+    - name: Upgrade software packages
+      yum: #module
+        name: '*'
+        state: latest
+    - name: Install the latest version of Apache
+      yum:
+        name: httpd
+        state: present
+    - name: Start Apache # systemclt start httpd
+      service:
+        name: httpd
+        state: started
+    - name: Enable service httpd, and not touch the state
+      service:
+        name: httpd
+        enabled: yes
+    - name: copy index.html file from the controller to the client
+      copy:
+        src: index.html
+        dest: /var/www/html
+    - name: Displaying custom message
+      debug:
+        msg: "Cloudspace Academy has Elite Cloud Engineers"
+    - name: Pinging Amazon-Hosts
+      ping:
+
+- name: #  Install GIT on all Ubuntu Hosts
+  hosts: Ubuntu-Clients
+  become: yes
+
+  tasks:
+    - name: Updates apt cache
+      action: apt update_cache=true
+    - name: Install git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
