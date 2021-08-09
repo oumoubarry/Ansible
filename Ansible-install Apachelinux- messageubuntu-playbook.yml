@@ -1,0 +1,38 @@
+# This is playbook to install Apache
+- name: installing Apache on amz Linux hosts # Play1
+  hosts : Amazon-Linux-Clients
+  tasks : 
+    - name: update all the software packages
+      yum:
+        name: '*'
+        state: latest
+    - name: Install the latest version of Apache
+      yum:
+        name: httpd
+        state: present
+    - name: Start Apache 
+      ansible.builtin.service:
+        name: httpd
+        state: started
+    - name: Enable service httpd, and not touch the state
+      ansible.builtin.service:
+        name: httpd
+        enabled: yes
+    - name: Copy index.html file from controller to the clients
+      ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html/
+- name : This play will display messages on all ubuntu Hosts # Play2
+  hosts : Ubuntu-Clients 
+  tasks:
+    - name: Displaying a massage
+      ansible.builtin.debug:
+        msg: "Cloudspace Academy has Elite Cloud Engineers"
+    - name: ping all ubuntu hosts
+      ansible.builtin.ping:
+
+
+
+
+
+
