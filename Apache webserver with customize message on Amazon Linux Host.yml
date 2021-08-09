@@ -1,0 +1,45 @@
+  - name: # Apache webserver with customize message on Amazon Linux Hosts
+    hosts: Amazon-Hosts 
+    become: yes
+
+  tasks: # let's make is a list because it's a set of task
+    - name: Upgrade software packages
+      yum: #module
+        name: '*'
+        state: latest
+    - name: Install the latest version of Apache
+      yum:
+        name: httpd
+        state: present
+    - name: Start Apache # systemclt start httpd
+      ansible.builtin.service:
+        name: httpd
+        state: started
+    - name: Enable service httpd, and not touch the state
+      ansible.builtin.service: # systemclt enable httpd
+        name: httpd
+        enabled: yes
+    - name: copy index.html file from the controller to the client
+      ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html
+    - name: Displaying custom message
+      ansible.builtin.debug:
+        msg: "Having fun with Ansible. Give yourself rewards when you genuinely become excited about it."
+    - name: Pinging Amazon-Hosts
+      ansible.builtin.ping:
+
+
+- name: #  Install GIT on all Ubuntu Hosts
+  hosts: Ubuntu-Hosts
+  become: yes
+  
+  tasks:
+    - name: Updates apt cache
+      action: apt update_cache=true
+    - name: Install git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+    
